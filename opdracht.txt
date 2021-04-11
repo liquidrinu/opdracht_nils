@@ -1,0 +1,20 @@
+Zoals uitgelegd werken wij met React, Typescript en Material-UI. Deze test gaat over de vraag of je een Backend API kunt koppelen met een stuk frontend. We gebruiken daar voor een set met technieken waarmee je dit deels kunt automatiseren. We gaan een aanmeldpagina maken, met een losse bedankt pagina. De aanmeldpagina spreekt de API aan, het resultaat moet weergegeven worden op de bedankpagina.
+
+    Starten met: npx create-react-app code-application-test --template typescript
+    API is te vinden op: https://code-application-api.devheld.nl/docs 
+    Material-UI documentatie is verkrijgbaar in TypeScript, op de site https://material-ui.com/
+    Je kunt pagina’s inrichten met react-router, https://medium.com/react-courses/how-to-integrate-routing-in-typescript-project-with-react-router-v5-2-0-a6b0ab160a1b
+    Graag je code in GIT, het liefst met meerdere commits, zodat ik je denkproces kan volgen.
+
+Extra’s:
+
+    Je maakt gebruik van React Hooks: https://reactjs.org/docs/hooks-intro.html
+    Je probeert zoveel mogelijk te Typen.
+    Je valideert het formulier met Zod, Joi, of Yup.
+    Je gebruikt openapi-generator-cli om de API automatisch te om te zetten naar een client, openapi-generator-cli generate -i ./openapi.json -g typescript-axios -o ./src/api
+
+Denk na over de interactie van de gebruiker met het formulier en de bedankpagina:
+
+    Het formulier kan niet meerdere keren versturen.
+    De versturen knop is disabled bij het versturen.
+    Je moet terug kunnen vanuit de bedankt pagina.
