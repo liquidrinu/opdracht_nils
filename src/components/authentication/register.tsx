@@ -8,8 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import { withRouter } from 'react-router';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
+
 
 // form styling
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +51,7 @@ export default withRouter(
         // form state variables
         const [submitting, setSubmitting] = useState(false);
         const [succesfullSubmit, setSuccesfullSubmit] = useState(false);
+        const [responseData, setResponseData] = useState("");
 
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -70,15 +71,19 @@ export default withRouter(
                 },
                 body: JSON.stringify(formData)
             })
-                .then((response) => {
-                    if (response.status === 200) {
-                        setSuccesfullSubmit(true);
-                    }
+                .then((response) => response.json())
+                .then((data) => {
+                    setResponseData(data.message);
+                    setSuccesfullSubmit(true);
                 })
                 .catch(() => console.log("error in form submission"));
 
             // while in transit..
             setSubmitting(true);
+        }
+
+        const User = (formData: IUser) => {
+            return <h1>formData</h1>;
         }
 
         return (
@@ -153,7 +158,10 @@ export default withRouter(
                     }
 
                     {succesfullSubmit &&
-                        <Redirect to="/bedankpagina" />
+                        <Redirect to={{
+                            pathname: '/bedankpagina',
+                            state: { message: responseData }
+                        }} />
                     }
 
                 </div>

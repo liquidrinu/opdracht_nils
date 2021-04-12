@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import Registration from "./components/authentication/register";
+import BedankPagina from "./components/authentication/bedankpagina";
 
 const routing = (
   < Router >
@@ -23,6 +24,9 @@ const routing = (
       </nav>
 
       <Switch>
+        <Route path="/bedankpagina">
+          <BedankPagina />
+        </Route>
         <Route path="/registration">
           <Registration />
         </Route>
