@@ -8,6 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { withRouter } from 'react-router';
+import { Redirect } from 'react-router-dom';
+
 // form styling
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -33,128 +36,128 @@ interface IUser {
     email: string;
 }
 
-// post data to api
-function API(url: string, method: string, data: IUser) {
-
-    fetch(url, {
-        method: method || "GET",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then((response) => {
-        })
-        .catch(() => console.log("error in form submission"));
-};
-
-
 // main function
-export default function Registration() {
-    const classes = useStyles();
+export default withRouter(
+    function Registration() {
+        const classes = useStyles();
 
-    const [formData, setFormData] = React.useState<IUser>({
-        first: "",
-        infix: "",
-        last: "",
-        email: ""
-    });
+        const [formData, setFormData] = React.useState<IUser>({
+            first: "",
+            infix: "",
+            last: "",
+            email: ""
+        });
 
-    const [submitting, setSubmitting] = useState(false);
+        // form state variables
+        const [submitting, setSubmitting] = useState(false);
+        const [succesfullSubmit, setSuccesfullSubmit] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
-    }
-
-    const handleSubmit = (e: any) => {
-
-        e.preventDefault();
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            setFormData({ ...formData, [e.target.name]: e.target.value })
+        }
 
         // POST data to api
-        API(
-            "https://code-application-api.devheld.nl/registration",
-            "POST",
-            formData
-        );
+        const handleSubmit = (e: any) => {
 
-        // while in transit..
-        setSubmitting(true);
-    }
+            e.preventDefault();
+            const url = "https://code-application-api.devheld.nl/registration";
 
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        setSuccesfullSubmit(true);
+                    }
+                })
+                .catch(() => console.log("error in form submission"));
 
-                <Typography component="h1" variant="h5">
-                    Register
-                </Typography>
+            // while in transit..
+            setSubmitting(true);
+        }
 
-                <form onSubmit={handleSubmit} className={classes.form}>
+        return (
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <div className={classes.paper}>
 
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="first"
-                        label="First"
-                        type="string"
-                        id="first"
-                        onChange={handleChange}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        name="infix"
-                        label="Infix"
-                        type="string"
-                        id="infix"
-                        onChange={handleChange}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="last"
-                        label="Last"
-                        type="string"
-                        id="last"
-                        onChange={handleChange}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        type="email"
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoFocus
-                        onChange={handleChange}
-                    />
-                    <Button
-                        disabled={submitting}
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
+                    <Typography component="h1" variant="h5">
                         Register
+                    </Typography>
+
+                    <form onSubmit={handleSubmit} className={classes.form}>
+
+                        <TextField
+                            autoFocus
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="first"
+                            label="First"
+                            type="string"
+                            id="first"
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                            name="infix"
+                            label="Infix"
+                            type="string"
+                            id="infix"
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="last"
+                            label="Last"
+                            type="string"
+                            id="last"
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            type="email"
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            onChange={handleChange}
+                        />
+                        <Button
+                            disabled={submitting}
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            Register
                     </Button>
-                </form>
+                    </form>
 
-                {submitting &&
-                    <h3>Submitting Form, please wait...</h3>
-                }
+                    {submitting &&
+                        <h3>Submitting Form, please wait...</h3>
+                    }
 
-            </div>
-        </Container >
-    );
-}
+                    {succesfullSubmit &&
+                        <Redirect to="/bedankpagina" />
+                    }
 
+                </div>
+            </Container >
+        );
+    }
+)
